@@ -1,5 +1,5 @@
 ##FROM openjdk:8-jdk-alpine as builder
-FROM openjdk:17 as builder
+FROM openjdk:17-jdk-alpine as builder
 
 LABEL author="yuluo" \
 	email="yuluo829@aliyun.com"

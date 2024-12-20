@@ -65,7 +65,7 @@ services:
       - rocketmq-net
  
   # rmqdashboard:
-    # image: openjdk:17  # 或者自定义镜像
+    # image: openjdk:17-jdk-alpine  # 或者自定义镜像
     # container_name: integrated-example-rmqdashboard
     # restart: always
     # ports:
