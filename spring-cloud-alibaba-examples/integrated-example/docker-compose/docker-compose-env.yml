@@ -16,6 +16,10 @@ services:
       # - NACOS_AUTH_IDENTITY_VALUE=custom_server_identity_value
     ports:
       - "8848:8848"
+    volumes:
+      - ../config-init/nacos/data/:/home/nacos/data # 挂载数据目录以持久化数据
+    networks:
+      - integrated-network
 
   # mysql
   mysql:
@@ -32,6 +36,8 @@ services:
       - ../config-init/sql/init.sql:/docker-entrypoint-initdb.d/init.sql
       - ../config-init/mysql8/my.cnf:/etc/mysql/my.cnf
       - ../config-init/mysql8/data:/var/lib/mysql
+    networks:
+      - integrated-network
 
   # rocketMQ
   rmqnamesrv:
@@ -42,6 +48,8 @@ services:
     ports:
       - "9876:9876"
     command: sh mqnamesrv
+    networks:
+      - integrated-network
     
   rmqbroker:
     image: apache/rocketmq:4.9.4
@@ -62,7 +70,7 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"  # 使容器能够通过宿主机 IP 访问
     networks:
-      - rocketmq-net
+      - integrated-network
  
   # rmqdashboard:
     # image: openjdk:17-jdk-alpine  # 或者自定义镜像
@@ -85,9 +93,9 @@ services:
         # max-file: "3"
     # mem_limit: 512m  # 限制容器最大内存为 512 MB
     # mem_reservation: 256m  # 容器预留内存为 256 MB
-    # networks:
-      # - rocketmq-net
- 
+#    networks:
+#      - integrated-network
+
   # seata
   seata-server:
     image: seataio/seata-server:1.5.1
@@ -99,7 +107,9 @@ services:
     environment:
       - SEATA_PORT=8091
       - STORE_MODE=file
+    networks:
+      - integrated-network
 
 networks:
-  rocketmq-net:
-    driver: bridge      
+  integrated-network:
+    driver: bridge
