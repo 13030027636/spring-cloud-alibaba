@@ -1,4 +1,4 @@
-version: "3"
+# version: "3"
 services:
 
   # integrated example module
@@ -20,7 +20,10 @@ services:
       - integrated-storage
       - integrated-praise-consumer
       - integrated-praise-provider
-
+    environment:
+      - JAVA_HOME=/usr/lib/jvm/java-17-openjdk
+      - PATH=$JAVA_HOME/bin:$PATH
+      
   integrated-gateway:
     image: integrated-gateway
     hostname: gateway-service
@@ -32,6 +35,9 @@ services:
     container_name: integrated-gateway
     ports:
       - ${GATEWAY_PORT}:${GATEWAY_PORT}
+    environment:
+      - JAVA_HOME=/usr/lib/jvm/java-17-openjdk
+      - PATH=$JAVA_HOME/bin:$PATH
 
   integrated-account:
     image: integrated-account
@@ -43,6 +49,9 @@ services:
     container_name: integrated-account
     ports:
       - ${ACCOUNT_PORT}:${ACCOUNT_PORT}
+    environment:
+      - JAVA_HOME=/usr/lib/jvm/java-17-openjdk
+      - PATH=$JAVA_HOME/bin:$PATH
 
   integrated-order:
     image: integrated-order
@@ -54,6 +63,9 @@ services:
     container_name: integrated-order
     ports:
       - ${ORDER_PORT}:${ORDER_PORT}
+    environment:
+      - JAVA_HOME=/usr/lib/jvm/java-17-openjdk
+      - PATH=$JAVA_HOME/bin:$PATH
 
   integrated-storage:
     image: integrated-storage
@@ -65,6 +77,9 @@ services:
     container_name: integrated-storage
     ports:
       - ${STORAGE_PORT}:${STORAGE_PORT}
+    environment:
+      - JAVA_HOME=/usr/lib/jvm/java-17-openjdk
+      - PATH=$JAVA_HOME/bin:$PATH
 
   integrated-praise-provider:
     image: integrated-praise-provider
@@ -76,6 +91,9 @@ services:
     container_name: integrated-praise-provider
     ports:
       - ${PRAISE_PROVIDER_PORT}:${PRAISE_PROVIDER_PORT}
+    environment:
+      - JAVA_HOME=/usr/lib/jvm/java-17-openjdk
+      - PATH=$JAVA_HOME/bin:$PATH
 
   integrated-praise-consumer:
     image: integrated-praise-consumer
@@ -89,3 +107,6 @@ services:
       - ${PRAISE_CONSUMER_PORT}:${PRAISE_CONSUMER_PORT}
     depends_on:
       - integrated-praise-provider
+    environment:
+      - JAVA_HOME=/usr/lib/jvm/java-17-openjdk
+      - PATH=$JAVA_HOME/bin:$PATH

@@ -1,4 +1,4 @@
-version: "3"
+# version: "3"
 services:
 
   # nacos
@@ -10,27 +10,28 @@ services:
     environment:
       - PREFER_HOST_MODE=hostname
       - MODE=standalone
+      - NACOS_AUTH_ENABLE=true
+      - NACOS_AUTH_TOKEN=dGhpcyBpcyBhIHNlY3JldCBrZXkgdGhhdCBpcyBzYWZlIHRvIGJlIHVzZWQgd2l0aCBKU1Q=
+      - NACOS_AUTH_IDENTITY_KEY=custom_server_identity_key
+      - NACOS_AUTH_IDENTITY_VALUE=custom_server_identity_value
     ports:
       - "8848:8848"
 
   # mysql
   mysql:
+    image: mysql:8.0
     container_name: integrated-example-mysql
     hostname: integrated-mysql
     restart: always
-    image: mysql:5.7
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: integrated_storage
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=integrated_storage
     ports:
       - "3306:3306"
     volumes:
       - ../config-init/sql/init.sql:/docker-entrypoint-initdb.d/init.sql
-    command:
-      [
-        --character-set-server=utf8mb4,
-        --collation-server=utf8mb4_unicode_ci
-      ]
+      - ../config-init/mysql8/my.cnf:/etc/mysql/my.cnf
+      - ../config-init/mysql8/data:/var/lib/mysql
 
   # rocketMQ
   rmqnamesrv:
@@ -41,7 +42,7 @@ services:
     ports:
       - "9876:9876"
     command: sh mqnamesrv
-
+    
   rmqbroker:
     image: apache/rocketmq:4.9.4
     restart: always
@@ -58,7 +59,35 @@ services:
     command: sh mqbroker -c /opt/rocketmq-4.9.4/conf/broker.conf
     depends_on:
       - rmqnamesrv
-
+    extra_hosts:
+      - "host.docker.internal:host-gateway"  # 使容器能够通过宿主机 IP 访问
+    networks:
+      - rocketmq-net
+ 
+  # rmqdashboard:
+    # image: openjdk:17  # 或者自定义镜像
+    # container_name: integrated-example-rmqdashboard
+    # restart: always
+    # ports:
+      # - "8080:8080"
+    # volumes:
+      # - /usr/lib/jvm/java-17-openjdk:/usr/lib/jvm/java-17-openjdk  # 挂载本地 JDK
+      # - /app/software/rocketmq-dashboard:/app  # 挂载应用程序目录
+    # environment:
+      # JAVA_HOME: /usr/lib/jvm/java-17-openjdk  # 设置 JAVA_HOME 环境变量
+      # PATH: $JAVA_HOME/bin:$PATH  # 更新 PATH 环境变量
+      # NAMESRV_ADDR: "rmqnamesrv:9876"
+    # command: java -jar /app/rocketmq-dashboard-2.0.0.jar  # 运行 JAR 文件
+    # logging:
+      # driver: "json-file"
+      # options:
+        # max-size: "10m"
+        # max-file: "3"
+    # mem_limit: 512m  # 限制容器最大内存为 512 MB
+    # mem_reservation: 256m  # 容器预留内存为 256 MB
+    # networks:
+      # - rocketmq-net
+ 
   # seata
   seata-server:
     image: seataio/seata-server:1.5.1
@@ -70,3 +99,7 @@ services:
     environment:
       - SEATA_PORT=8091
       - STORE_MODE=file
+
+networks:
+  rocketmq-net:
+    driver: bridge      

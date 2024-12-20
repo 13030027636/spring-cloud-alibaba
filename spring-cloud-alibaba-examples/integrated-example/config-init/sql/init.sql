@@ -1,6 +1,6 @@
 -- Storage库存微服务的数据库业务初始化
 DROP DATABASE IF EXISTS integrated_storage;
-CREATE DATABASE integrated_storage;
+CREATE DATABASE integrated_storage CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE integrated_storage;
 CREATE TABLE `storage`
 (
@@ -19,7 +19,7 @@ VALUES ('1', '1', '100', '2022-08-07 22:48:29', '2022-08-14 13:49:05');
 
 -- Account账户微服务的数据库业务初始化
 DROP DATABASE IF EXISTS integrated_account;
-CREATE DATABASE integrated_account;
+CREATE DATABASE integrated_account CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE integrated_account;
 CREATE TABLE `account`
 (
@@ -37,7 +37,7 @@ VALUES ('1', 'admin', '3', '2022-08-07 22:53:01', '2022-08-14 13:49:05');
 
 -- Order订单微服务的数据库业务初始化
 DROP DATABASE IF EXISTS integrated_order;
-CREATE DATABASE integrated_order;
+CREATE DATABASE integrated_order CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE integrated_order;
 CREATE TABLE `order`
 (
@@ -55,7 +55,7 @@ CREATE TABLE `order`
 
 -- 点赞业务的数据库初始化
 DROP DATABASE IF EXISTS integrated_praise;
-CREATE DATABASE integrated_praise;
+CREATE DATABASE integrated_praise CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE integrated_praise;
 CREATE TABLE `item`
 (
