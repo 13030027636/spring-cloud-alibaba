@@ -1,0 +1,19 @@
+services:
+  integrated-gateway:
+    image: integrated-gateway
+    hostname: gateway-service
+    build:
+      dockerfile: ./integrated-gateway/Dockerfile
+      context: ../
+    env_file:
+        - .env
+    container_name: integrated-gateway
+    ports:
+      - ${GATEWAY_PORT}:${GATEWAY_PORT}
+    networks:
+      - docker-compose_integrated-network
+      
+networks:
+  docker-compose_integrated-network:
+    external: true
+    name: docker-compose_integrated-network      

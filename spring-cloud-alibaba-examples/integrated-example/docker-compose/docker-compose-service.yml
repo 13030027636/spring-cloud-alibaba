@@ -21,7 +21,7 @@ services:
       - integrated-praise-consumer
       - integrated-praise-provider
     networks:
-      - integrated-network
+      - docker-compose_integrated-network
       
   integrated-gateway:
     image: integrated-gateway
@@ -35,7 +35,7 @@ services:
     ports:
       - ${GATEWAY_PORT}:${GATEWAY_PORT}
     networks:
-      - integrated-network
+      - docker-compose_integrated-network
 
   integrated-account:
     image: integrated-account
@@ -48,7 +48,7 @@ services:
     ports:
       - ${ACCOUNT_PORT}:${ACCOUNT_PORT}
     networks:
-      - integrated-network
+      - docker-compose_integrated-network
 
   integrated-order:
     image: integrated-order
@@ -61,7 +61,7 @@ services:
     ports:
       - ${ORDER_PORT}:${ORDER_PORT}
     networks:
-      - integrated-network
+      - docker-compose_integrated-network
 
   integrated-storage:
     image: integrated-storage
@@ -74,7 +74,7 @@ services:
     ports:
       - ${STORAGE_PORT}:${STORAGE_PORT}
     networks:
-      - integrated-network
+      - docker-compose_integrated-network
 
   integrated-praise-provider:
     image: integrated-praise-provider
@@ -87,7 +87,7 @@ services:
     ports:
       - ${PRAISE_PROVIDER_PORT}:${PRAISE_PROVIDER_PORT}
     networks:
-      - integrated-network
+      - docker-compose_integrated-network
 
   integrated-praise-consumer:
     image: integrated-praise-consumer
@@ -102,9 +102,9 @@ services:
     depends_on:
       - integrated-praise-provider
     networks:
-      - integrated-network
+      - docker-compose_integrated-network
 
 networks:
-  default:
-    external:
-      name: integrated-network
+  docker-compose_integrated-network:
+    external: true
+    name: docker-compose_integrated-network
