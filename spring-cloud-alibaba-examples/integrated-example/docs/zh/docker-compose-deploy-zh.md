@@ -21,6 +21,16 @@
 127.0.0.1 rocketmq
 127.0.0.1 gateway-service
 127.0.0.1 integrated-frontend
+
+
+
+# for integrated-example
+192.168.30.135 integrated-mysql
+192.168.30.135 nacos-server
+192.168.30.135 seata-server
+192.168.30.135 rocketmq
+192.168.30.135 gateway-service
+192.168.30.135 integrated-frontend
 ```
 
 ### 准备 jar 包
