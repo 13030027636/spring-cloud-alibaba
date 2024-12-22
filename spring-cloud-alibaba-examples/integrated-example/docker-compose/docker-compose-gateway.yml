@@ -13,6 +13,19 @@ services:
     networks:
       - docker-compose_integrated-network
       
+  integrated-account:
+    image: integrated-account
+    build:
+      dockerfile: ./integrated-account/Dockerfile
+      context: ../
+    env_file:
+        - .env
+    container_name: integrated-account
+    ports:
+      - ${ACCOUNT_PORT}:${ACCOUNT_PORT}
+    networks:
+      - docker-compose_integrated-network
+      
 networks:
   docker-compose_integrated-network:
     external: true

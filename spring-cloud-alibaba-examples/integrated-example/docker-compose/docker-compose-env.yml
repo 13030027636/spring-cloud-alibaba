@@ -50,9 +50,15 @@ services:
     command: sh mqnamesrv
     networks:
       - integrated-network
+    # healthcheck:
+      # test: ["CMD-SHELL", "nc -z localhost 9876 || exit 1"]
+      # interval: 10s
+      # timeout: 5s
+      # retries: 3  
     
   rmqbroker:
     image: apache/rocketmq:4.9.4
+    hostname: rmqbroker  # 添加hostname
     restart: always
     container_name: integrated-example-rmqbroker
     ports:
@@ -63,42 +69,46 @@ services:
     environment:
       NAMESRV_ADDR: "rmqnamesrv:9876"
       JAVA_OPTS: " -Duser.home=/opt"
-      JAVA_OPT_EXT: "-server -Xms128m -Xmx128m -Xmn128m"
+      JAVA_OPT_EXT: "-server -Xms256m -Xmx256m -Xmn128m"
     command: sh mqbroker -c /opt/rocketmq-4.9.4/conf/broker.conf
     depends_on:
       - rmqnamesrv
-    extra_hosts:
-      - "host.docker.internal:host-gateway"  # 使容器能够通过宿主机 IP 访问
     networks:
       - integrated-network
- 
-  # rmqdashboard:
-    # image: openjdk:17-jdk-alpine  # 或者自定义镜像
-    # container_name: integrated-example-rmqdashboard
-    # restart: always
-    # ports:
-      # - "8080:8080"
-    # volumes:
-      # - /usr/lib/jvm/java-17-openjdk:/usr/lib/jvm/java-17-openjdk  # 挂载本地 JDK
-      # - /app/software/rocketmq-dashboard:/app  # 挂载应用程序目录
-    # environment:
-      # JAVA_HOME: /usr/lib/jvm/java-17-openjdk  # 设置 JAVA_HOME 环境变量
-      # PATH: $JAVA_HOME/bin:$PATH  # 更新 PATH 环境变量
-      # NAMESRV_ADDR: "rmqnamesrv:9876"
-    # command: java -jar /app/rocketmq-dashboard-2.0.0.jar  # 运行 JAR 文件
-    # logging:
-      # driver: "json-file"
-      # options:
-        # max-size: "10m"
-        # max-file: "3"
-    # mem_limit: 512m  # 限制容器最大内存为 512 MB
-    # mem_reservation: 256m  # 容器预留内存为 256 MB
-#    networks:
-#      - integrated-network
-
+    # healthcheck:
+      # test: ["CMD-SHELL", "nc -z localhost 10911 || exit 1"]
+      # interval: 10s
+      # timeout: 5s
+      # retries: 3
+      
+  rmqdashboard:
+    image: apacherocketmq/rocketmq-dashboard:latest
+    hostname: rmqdashboard
+    restart: always
+    container_name: integrated-example-rmqdashboard
+    environment:
+      - JAVA_OPTS=-Drocketmq.namesrv.addr=rmqnamesrv:9876
+    ports:
+      - "9090:8080"
+    # mem_limit: 1g  # 限制容器最大内存为 512 MB
+    ulimits:
+      nofile:
+        soft: 65535
+        hard: 65535
+    depends_on:
+      - rmqnamesrv
+      - rmqbroker
+    networks:
+      - integrated-network
+    # healthcheck:
+      # test: ["CMD-SHELL", "nc -z localhost 8080 || exit 1"]
+      # interval: 10s
+      # timeout: 5s
+      # retries: 3
+      
   # seata
   seata-server:
-    image: seataio/seata-server:1.5.1
+    image: seataio/seata-server:latest   # seataio/seata-server:1.5.1
     hostname: seata-server
     restart: always
     container_name: integrated-example-seata-server
